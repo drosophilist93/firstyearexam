@@ -1,7 +1,7 @@
 ---
 title: "Question 15"
 author: "Chloe J. Welch"
-date: "6/4/2022"
+date: "7/4/2022"
 output: pdf_document
 ---
 
@@ -26,13 +26,6 @@ Next, we will import the COVID-19 variant data.
 ```{r}
 covid.data <- read.csv("covid19_variants.csv")
 head(covid.data)
-```
-
-Let’s call the `skim()` function from the skimr package to get a quick overview of this dataset:
-
-```{r}
-library(skimr)
-skimr::skim(covid.data)
 ```
 
 We can use `lubridate` to help make dealing with the dates of the data set a little simpler.
@@ -61,3 +54,8 @@ covid.data.plot <- ggplot(filtered.data, aes(date, percentage)) +
 covid.data.plot + theme_bw() + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+
+
+
+
+
