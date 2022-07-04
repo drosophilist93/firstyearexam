@@ -1,0 +1,63 @@
+---
+title: "Question 15"
+author: "Chloe J. Welch"
+date: "6/4/2022"
+output: pdf_document
+---
+
+**Q15**. [10pt] Obtain the most recently dated COVID-19 Variant Data from the California Health and Human Services (CHHS) open data site:
+
+https://data.chhs.ca.gov/dataset/covid-19-variant-data
+
+Upload to gradescope a PDF format report generated from an Rmarkdown document that demonstrates reading the above CSV file and generating the below visualization of this data.
+
+NB. You can chose how to make this plot and whether you want to make improvements or stylistic changes. However, you are strongly encouraged to use the ggplot2, lubridate and dplyr packages for this task. Please make sure your name and PID number is on the first page and that your report contains all of your code, text description/narrative text of why you doing a particular task/code chunk and the resulting figure.
+
+# We will begin by loading the necessary packages to analyze this data set. These were already installed in BGGN 213 during the fall quarter.
+
+```{r}
+library(ggplot2)
+library(lubridate)
+library(dplyr)
+```
+
+Next, we will import the COVID-19 variant data.
+
+```{r}
+covid.data <- read.csv("covid19_variants.csv")
+head(covid.data)
+```
+
+Let’s call the `skim()` function from the skimr package to get a quick overview of this dataset:
+
+```{r}
+library(skimr)
+skimr::skim(covid.data)
+```
+
+We can use `lubridate` to help make dealing with the dates of the data set a little simpler.
+
+```{r}
+covid.data$date <- ymd(covid.data$date)
+head(covid.data$date)
+```
+
+Next, let's filter out the entries we do not need.
+
+```{r}
+filtered.data <- filter(covid.data, variant_name != "Total" & variant_name != "Other")
+head(filtered.data)
+```
+
+Let's use `ggplot2` to plot this data. The title of the plot will be "COVID-19 Variants in California" with the dates on the x-axis and the percentage of sequenced specimens on the y-axis. The date breaks are equal to 1 month so each individual month is clearly represented. The different colors represent the different variants of COVID-19 and are denoted in the legend to the right of the plot.
+
+```{r}
+covid.data.plot <- ggplot(filtered.data, aes(date, percentage)) +
+  geom_line(aes(color = variant_name)) +
+  labs(x="", y="Percentage of sequenced specimens", 
+       title= "COVID-19 Variants in California", color="") + 
+  scale_x_date(date_breaks="1 month", date_labels="%b %Y") 
+  
+covid.data.plot + theme_bw() + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
